@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <meta name="theme-color" content="#111827">
+
+  <title>Papas Geburtstagsfoto</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family:
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+
+      background:
+        linear-gradient(145deg, #fff7ed, #fce7f3);
+
+      color: #111827;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 25px 18px 60px;
+    }
+
+    .karte {
+      background: rgba(255, 255, 255, 0.92);
+      border-radius: 28px;
+      padding: 26px;
+      margin-top: 18px;
+
+      box-shadow:
+        0 12px 40px rgba(0, 0, 0, 0.08);
+    }
+
+    .kopf {
+      text-align: center;
+      padding: 35px 20px;
+    }
+
+    .symbol {
+      font-size: 55px;
+    }
+
+    h1 {
+      font-size: clamp(2.2rem, 9vw, 4rem);
+      line-height: 1;
+      margin: 15px 0;
+    }
+
+    h2 {
+      margin-top: 0;
+    }
+
+    .untertitel {
+      color: #6b7280;
+      font-size: 1.1rem;
+    }
+
+    .countdown {
+      font-size: clamp(1.8rem, 8vw, 3.5rem);
+      font-weight: 800;
+      text-align: center;
+      margin: 30px 0;
+    }
+
+    .hinweis {
+      padding: 15px;
+      border-radius: 15px;
+      background: #f3f4f6;
+      color: #374151;
+    }
+
+    .kinder {
+      display: grid;
+      grid-template-columns:
+        repeat(auto-fit, minmax(190px, 1fr));
+
+      gap: 15px;
+    }
+
+    .kind {
+      background: white;
+      border: 1px solid #e5e7eb;
+      border-radius: 20px;
+      padding: 18px;
+    }
+
+    .kind h3 {
+      margin-top: 0;
+    }
+
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: 700;
+    }
+
+    input {
+      width: 100%;
+      padding: 13px;
+      margin-top: 7px;
+
+      border: 1px solid #d1d5db;
+      border-radius: 12px;
+
+      font-size: 1rem;
+    }
+
+    button {
+      border: none;
+      border-radius: 14px;
+
+      padding: 13px 18px;
+      margin-top: 10px;
+
+      background: #111827;
+      color: white;
+
+      font-size: 1rem;
+      font-weight: 700;
+
+      cursor: pointer;
+    }
+
+    button:hover {
+      opacity: 0.9;
+    }
+
+    button.zurueck {
+      background: #e5e7eb;
+      color: #111827;
+      margin-left: 5px;
+    }
+
+    .versteckt {
+      display: none;
+    }
+
+    .foto {
+      width: 100%;
+      max-height: 400px;
+      object-fit: cover;
+
+      border-radius: 18px;
+      margin-top: 15px;
+    }
+
+    .foto-box {
+      margin-top: 15px;
+    }
+
+    .klein {
+      color: #6b7280;
+      font-size: 0.9rem;
+    }
+
+    .erfolg {
+      padding: 15px;
+      border-radius: 15px;
+
+      background: #ecfdf5;
+      color: #065f46;
+    }
+
+    .geschenk {
+      text-align: center;
+      padding: 20px;
+    }
+
+    .geschenk h2 {
+      font-size: 2rem;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <!-- STARTSEITE -->
+  <section class="karte kopf">
+
+    <div class="symbol">
+      🎂📸
+    </div>
+
+    <h1>
+      Papas Geburtstagsfoto
+    </h1>
+
+    <p class="untertitel">
+      Drei Fotos. Ein ganz besonderer Geburtstag.
+    </p>
+
+    <div
+      id="countdown"
+      class="countdown">
+      Lade Countdown ...
+    </div>
+
+    <div
+      id="status"
+      class="hinweis">
+
+      Die Fotos bleiben bis zum
+      9. Dezember 2026 geheim. 🔒
+
+    </div>
+
+  </section>
+
+
+  <!-- BEREICH FÜR DIE KINDER -->
+  <section class="karte">
+
+    <h2>
+      📸 Für die Kinder
+    </h2>
+
+    <p>
+      Jedes Kind kann hier sein schönstes aktuelles
+      Foto hochladen und später jederzeit durch ein
+      besseres ersetzen.
+    </p>
+
+    <div
+      id="kinder"
+      class="kinder">
+    </div>
+
+  </section>
+
+
+  <!-- FOTO-UPLOAD -->
+  <section
+    id="uploadBereich"
+    class="karte versteckt">
+
+    <h2 id="kindTitel">
+      Foto hochladen
+    </h2>
+
+    <p>
+      Wähle ein Foto von deinem Handy aus.
+      Du kannst es später jederzeit ersetzen.
+    </p>
+
+    <label>
+      📷 Foto auswählen
+
+      <input
+        id="fotoDatei"
+        type="file"
+        accept="image/*">
+    </label>
+
+    <div
+      id="vorschau"
+      class="foto-box">
+    </div>
+
+    <button id="speichern">
+      Foto speichern
+    </button>
+
+    <button
+      id="abmelden"
+      class="zurueck">
+
+      Zurück
+
+    </button>
+
+  </section>
+
+
+  <!-- GEBURTSTAG -->
+  <section class="karte geschenk">
+
+    <h2>
+      🎁 Papas Geburtstag
+    </h2>
+
+    <p>
+      Am 9. Dezember wird das Geschenk geöffnet.
+    </p>
+
+    <div id="geburtstagsFotos">
+
+      🔒 Noch verschlossen.
+
+    </div>
+
+  </section>
+
+</div>
+
+
+<script>
+
+  /*
+   * ============================================================
+   * EINSTELLUNGEN
+   * ============================================================
+   */
+
+  /*
+   * Der Zeitpunkt, an dem Papa die Fotos sehen darf.
+   *
+   * 9. Dezember 2026, 00:00 Uhr
+   */
+
+  const geburtstag =
+    new Date("2026-12-09T00:00:00+01:00");
+
+
+  /*
+   * DIE DREI KINDER
+   *
+   * Die Codes kannst du später ändern.
+   */
+
+  const kinder = [
+
+    {
+      name: "Kind 1",
+      code: "1111"
+    },
+
+    {
+      name: "Kind 2",
+      code: "2222"
+    },
+
+    {
+      name: "Kind 3",
+      code: "3333"
+    }
+
+  ];
+
+
+  /*
+   * Aktuell angemeldetes Kind
+   */
+
+  let aktivesKind = -1;
+
+
+  /*
+   * Neues Foto, bevor es gespeichert wird
+   */
+
+  let neuesFoto = null;
+
+
+  /*
+   * Kurze Hilfsfunktion
+   */
+
+  function element(id) {
+
+    return document.getElementById(id);
+
+  }
+
+
+  /*
+   * ============================================================
+   * PRÜFEN, OB DER GEBURTSTAG ERREICHT IST
+   * ============================================================
+   */
+
+  function geburtstagErreicht() {
+
+    return new Date() >= geburtstag;
+
+  }
+
+
+  /*
+   * ============================================================
+   * COUNTDOWN
+   * ============================================================
+   */
+
+  function countdownAktualisieren() {
+
+    const jetzt = new Date();
+
+    const differenz =
+      geburtstag - jetzt;
+
+
+    /*
+     * Geburtstag ist da
+     */
+
+    if (differenz <= 0) {
+
+      element("countdown").textContent =
+        "🎉 Es ist soweit!";
+
+      element("status").textContent =
+        "Die Fotos sind jetzt freigeschaltet! ❤️";
+
+      geburtstagsFotosAnzeigen();
+
+      return;
+
+    }
+
+
+    /*
+     * Noch warten
+     */
+
+    const tage =
+      Math.floor(
+        differenz /
+        (1000 * 60 * 60 * 24)
+      );
+
+    const stunden =
+      Math.floor(
+        differenz /
+        (1000 * 60 * 60)
+      ) % 24;
+
+    const minuten =
+      Math.floor(
+        differenz /
+        (1000 * 60)
+      ) % 60;
+
+    const sekunden =
+      Math.floor(
+        differenz /
+        1000
+      ) % 60;
+
+
+    element("countdown").textContent =
+
+      tage + " Tage " +
+      stunden + " Std. " +
+      minuten + " Min. " +
+      sekunden + " Sek.";
+
+  }
+
+
+  /*
+   * ============================================================
+   * KINDER-ANMELDUNG ANZEIGEN
+   * ============================================================
+   */
+
+  function kinderAnzeigen() {
+
+    const bereich =
+      element("kinder");
+
+    bereich.innerHTML = "";
+
+
+    kinder.forEach(
+      function(kind, index) {
+
+        const div =
+          document.createElement("div");
+
+        div.className = "kind";
+
+
+        div.innerHTML = `
+
+          <h3>
+            📸 ${kind.name}
+          </h3>
+
+          <p class="klein">
+            Persönlichen Code eingeben
+          </p>
+
+          <input
+            id="code-${index}"
+            type="password"
+            inputmode="numeric"
+            placeholder="Code">
+
+          <button
+            onclick="kindAnmelden(${index})">
+
+            Foto öffnen
+
+          </button>
+
+        `;
+
+
+        bereich.appendChild(div);
+
+      }
+    );
+
+  }
+
+
+  /*
+   * ============================================================
+   * KIND ANMELDEN
+   * ============================================================
+   */
+
+  function kindAnmelden(index) {
+
+    const eingegebenerCode =
+      element("code-" + index).value;
+
+
+    if (
+      eingegebenerCode !==
+      kinder[index].code
+    ) {
+
+      alert(
+        "❌ Der persönliche Code ist nicht richtig."
+      );
+
+      return;
+
+    }
+
+
+    aktivesKind = index;
+
+    neuesFoto = null;
+
+
+    element("uploadBereich")
+      .classList
+      .remove("versteckt");
+
+
+    element("kindTitel").textContent =
+      kinder[index].name +
+      " – dein Geburtstagsfoto";
+
+
+    /*
+     * Bereits gespeichertes Foto anzeigen
+     */
+
+    const gespeichertesFoto =
+      localStorage.getItem(
+        "foto-" + index
+      );
+
+
+    if (gespeichertesFoto) {
+
+      element("vorschau").innerHTML = `
+
+        <img
+          class="foto"
+          src="${gespeichertesFoto}">
+
+        <p class="klein">
+          Dein aktuelles Foto.
+          Du kannst es jederzeit ersetzen.
+        </p>
+
+      `;
+
+    } else {
+
+      element("vorschau").innerHTML = `
+
+        <p class="klein">
+          Du hast noch kein Foto hochgeladen.
+        </p>
+
+      `;
+
+    }
+
+
+    window.scrollTo({
+
+      top:
+        element("uploadBereich")
+        .offsetTop,
+
+      behavior: "smooth"
+
+    });
+
+  }
+
+
+  /*
+   * ============================================================
+   * FOTO AUSWÄHLEN
+   * ============================================================
+   */
+
+  element("fotoDatei")
+    .addEventListener(
+      "change",
+      function(event) {
+
+        const datei =
+          event.target.files[0];
+
+
+        if (!datei) {
+
+          return;
+
+        }
+
+
+        const reader =
+          new FileReader();
+
+
+        reader.onload =
+          function(e) {
+
+            neuesFoto =
+              e.target.result;
+
+
+            element("vorschau").innerHTML = `
+
+              <img
+                class="foto"
+                src="${neuesFoto}">
+
+              <p class="klein">
+                Vorschau deines neuen Fotos.
+              </p>
+
+            `;
+
+          };
+
+
+        reader.readAsDataURL(datei);
+
+      }
+    );
+
+
+  /*
+   * ============================================================
+   * FOTO SPEICHERN
+   * ============================================================
+   */
+
+  element("speichern")
+    .addEventListener(
+      "click",
+      function() {
+
+        if (aktivesKind === -1) {
+
+          return;
+
+        }
+
+
+        if (!neuesFoto) {
+
+          alert(
+            "Bitte zuerst ein Foto auswählen."
+          );
+
+          return;
+
+        }
+
+
+        localStorage.setItem(
+
+          "foto-" +
+          aktivesKind,
+
+          neuesFoto
+
+        );
+
+
+        alert(
+          "✅ Dein Foto wurde gespeichert!"
+        );
+
+
+        neuesFoto = null;
+
+
+        element("fotoDatei").value = "";
+
+
+        element("vorschau").innerHTML = `
+
+          <img
+            class="foto"
+            src="${localStorage.getItem(
+              "foto-" + aktivesKind
+            )}">
+
+          <p class="erfolg">
+            Dein Foto ist gespeichert.
+            Du kannst jederzeit ein neues auswählen.
+          </p>
+
+        `;
+
+
+        geburtstagsFotosAnzeigen();
+
+      }
+    );
+
+
+  /*
+   * ============================================================
+   * ABMELDEN
+   * ============================================================
+   */
+
+  element("abmelden")
+    .addEventListener(
+      "click",
+      function() {
+
+        aktivesKind = -1;
+
+        neuesFoto = null;
+
+        element("uploadBereich")
+          .classList
+          .add("versteckt");
+
+      }
+    );
+
+
+  /*
+   * ============================================================
+   * FOTOS AM GEBURTSTAG ANZEIGEN
+   * ============================================================
+   */
+
+  function geburtstagsFotosAnzeigen() {
+
+    const bereich =
+      element("geburtstagsFotos");
+
+
+    /*
+     * Vor dem Geburtstag:
+     */
+
+    if (!geburtstagErreicht()) {
+
+      bereich.innerHTML = `
+
+        <p>
+          🔒 Noch verschlossen.
+        </p>
+
+        <p class="klein">
+          Am 9. Dezember öffnet sich
+          das Geburtstagsgeschenk.
+        </p>
+
+      `;
+
+      return;
+
+    }
+
+
+    /*
+     * Geburtstag:
+     */
+
+    let html = `
+
+      <div class="erfolg">
+
+        🎉 <strong>
+        Alles Gute zum Geburtstag, Papa!
+        </strong>
+
+        <br><br>
+
+        Deine drei Geburtstagsfotos sind da. ❤️
+
+      </div>
+
+      <div class="kinder">
+
+    `;
+
+
+    kinder.forEach(
+      function(kind, index) {
+
+        const foto =
+          localStorage.getItem(
+            "foto-" + index
+          );
+
+
+        html += `
+
+          <div class="kind">
+
+            <h3>
+              ${kind.name}
+            </h3>
+
+        `;
+
+
+        if (foto) {
+
+          html += `
+
+            <img
+              class="foto"
+              src="${foto}">
+
+          `;
+
+        } else {
+
+          html += `
+
+            <p>
+              Für dieses Kind wurde noch
+              kein Foto hochgeladen.
+            </p>
+
+          `;
+
+        }
+
+
+        html += `
+
+          </div>
+
+        `;
+
+      }
+    );
+
+
+    html += `
+
+      </div>
+
+    `;
+
+
+    bereich.innerHTML = html;
+
+  }
+
+
+  /*
+   * ============================================================
+   * START
+   * ============================================================
+   */
+
+  kinderAnzeigen();
+
+  countdownAktualisieren();
+
+  geburtstagsFotosAnzeigen();
+
+
+  /*
+   * Countdown jede Sekunde aktualisieren
+   */
+
+  setInterval(
+    countdownAktualisieren,
+    1000
+  );
+
+</script>
+
+</body>
+</html>
